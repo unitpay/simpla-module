@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<name>
+		Unitpay
+	</name>
+	<settings>
+		<variable>public_key</variable>
+		<name>PUBLIC KEY</name>
+	</settings>
+	<settings>
+		<variable>secret_key</variable>
+		<name>SECRET KEY</name>
+	</settings>
+</module>
