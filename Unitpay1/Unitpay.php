@@ -9,7 +9,6 @@ class Unitpay extends Simpla
 		if(empty($button_text))
 			$button_text = 'Перейти к оплате';
 
-
 		$order = $this->orders->get_order((int)$order_id);
 		$payment_method = $this->payment->get_payment_method($order->payment_method_id);
 		$payment_settings = $this->payment->get_payment_settings($payment_method->id);
@@ -18,14 +17,12 @@ class Unitpay extends Simpla
 //		$payment_currency = $this->money->get_currency(intval($payment_method->currency_id));
 //		$currency_code = $payment_currency->code;
 		// номер заказа
-		// number of order
 		$order_id = $order->id;
 
 		$public_key = $payment_settings['public_key'];
 		$account = $order_id;
 		$sum = $amount;
 		$desc = 'Оплата по заказу №' . $order_id;
-
 
 		$button =	'<form name="unitpay" action="https://unitpay.ru/pay/' . $public_key . '" method="get">
             <input type="hidden" name="sum" value="' . $sum . '">
