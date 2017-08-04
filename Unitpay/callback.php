@@ -6,8 +6,8 @@ $simpla = new Simpla();
 
 //header('Content-type:application/json;  charset=utf-8');
 $method = '';
-$params = [];
-$result = [];
+$params = array();
+$result = array();
 if ((isset($_GET['params'])) && (isset($_GET['method'])) && (isset($_GET['params']['signature']))){
     $params = $_GET['params'];
     $method = $_GET['method'];
