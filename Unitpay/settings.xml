@@ -4,6 +4,10 @@
 		Unitpay
 	</name>
 	<settings>
+		<variable>domain</variable>
+		<name>DOMAIN</name>
+	</settings>
+	<settings>
 		<variable>public_key</variable>
 		<name>PUBLIC KEY</name>
 	</settings>
