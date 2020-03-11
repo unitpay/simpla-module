@@ -19,12 +19,13 @@ class Unitpay extends Simpla
 		// номер заказа
 		$order_id = $order->id;
 
+		$domain = $payment_settings['domain'];
 		$public_key = $payment_settings['public_key'];
 		$account = $order_id;
 		$sum = $amount;
 		$desc = 'Оплата по заказу №' . $order_id;
 
-		$button =	'<form name="unitpay" action="https://unitpay.ru/pay/' . $public_key . '" method="get">
+		$button =	'<form name="unitpay" action="https://' . $domain . '/pay/' . $public_key . '" method="get">
             <input type="hidden" name="sum" value="' . $sum . '">
             <input type="hidden" name="account" value="' . $account . '">
             <input type="hidden" name="desc" value="' . $desc . '">
