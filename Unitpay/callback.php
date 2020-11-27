@@ -130,6 +130,69 @@ function check( $params )
     return $result;
 }
 
+function error( $params )
+{
+	$order_id = $params['account'];
+    $simpla = new Simpla();
+    $order = $simpla->orders->get_order(intval( $order_id ));
+    if(empty($order)) {
+        $result = array('error' =>
+            array('message' => 'заказа не существует')
+        );
+    }else{
+        $payment_method = $simpla->payment->get_payment_method(intval($order->payment_method_id));
+        if(empty($payment_method)){
+            $result = array('error' =>
+                array('message' => 'Неизвестный метод оплаты')
+            );
+        }else{
+
+            $sum=$simpla->money->convert($order->total_price, $payment_method->currency_id, false) ;
+            $sum=number_format($sum, 2, '.', '');
+
+
+            if ((float)$sum != (float)$params['orderSum']) {
+                $result = array('error' =>
+                    array('message' => 'не совпадает сумма заказа')
+                );
+            }else{
+
+                $payment_currency = $simpla->money->get_currency(intval($payment_method->currency_id));
+                $currency_code = $payment_currency->code;
+                if ($currency_code == 'RUR'){
+                    $currency_code = 'RUB';
+                }
+
+                if ($currency_code != $params['orderCurrency']) {
+                    $result = array('error' =>
+                        array('message' => 'не совпадает валюта заказа')
+                    );
+                }
+                else{
+
+
+                    if($order->paid){
+                        $result = array('error' =>
+                            array('message' => 'Этот заказ уже оплачен')
+                        );
+                    }else{
+                        // Установим статус не оплачен
+                        $simpla->orders->update_order(intval($order->id), array('paid'=>0));
+
+                        $result = array('error' =>
+                            array('message' => $params['errorMessage'])
+                        );
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    return $result;
+}
+
 function payment( $params )
 {
     $order_id = $params['account'];
@@ -181,8 +244,13 @@ function payment( $params )
 
                         // Спишем товары
                         $simpla->orders->close(intval($order->id));
-                        $simpla->notify->email_order_user(intval($order->id));
-                        $simpla->notify->email_order_admin(intval($order->id));
+						
+						try {
+							$simpla->notify->email_order_user(intval($order->id));
+							$simpla->notify->email_order_admin(intval($order->id));
+						} catch (Exception $e) {
+						
+						}
 
                         $result = array('result' =>
                             array('message' => 'Запрос успешно обработан')
